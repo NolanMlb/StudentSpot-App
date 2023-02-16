@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.student_spot">
+    package="com.fablab.student_spot">
    <application
         android:label="student_spot"
         android:name="${applicationName}"

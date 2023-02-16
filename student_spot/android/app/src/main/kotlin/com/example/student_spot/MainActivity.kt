@@ -1,4 +1,4 @@
-package com.example.student_spot
+package com.fablab.student_spot
 
 import io.flutter.embedding.android.FlutterActivity
 
