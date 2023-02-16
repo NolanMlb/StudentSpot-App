@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: Image.asset(
                   'assets/img/logo.png',
-                  height: 30,
+                  height: 48,
                 ),
               ),
               const Spacer(),
