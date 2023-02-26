@@ -9,32 +9,39 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Container(
+            margin: const EdgeInsets.only(top: 120.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Image.asset('assets/img/logo.png', height: 48),
+                Image.asset('assets/img/logo.png', height: 67),
                 SizedBox(height: 82.0),
-                const Text(
-                  'Bienvenue sur StudentSpot',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontFamily: 'Unbounded',
-                    decoration: TextDecoration.none,
+                Container(
+                  alignment: Alignment.center,
+                  child: const Text(
+                    'Bienvenue sur StudentSpot',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontFamily: 'Unbounded',
+                      decoration: TextDecoration.none,
+                    ),
                   ),
                 ),
-                const Text(
-                  'Connectez-vous et procédez à vos appels',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
-                    fontFamily: 'Unbounded',
-                    decoration: TextDecoration.none,
+                Container(
+                  padding: const EdgeInsets.only(top: 12.0),
+                  alignment: Alignment.center,
+                  child: const Text(
+                    'Connectez-vous et procédez à vos appels',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                      fontFamily: 'Unbounded',
+                      decoration: TextDecoration.none,
+                    ),
                   ),
                 ),
                 SizedBox(height: 32.0),
