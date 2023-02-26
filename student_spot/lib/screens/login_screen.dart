@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 
+import 'ecole_screen.dart';
+
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
@@ -101,7 +103,12 @@ class LoginScreen extends StatelessWidget {
                     child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EcoleScreen()));
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black,
                           padding: EdgeInsets.symmetric(vertical: 16.0),

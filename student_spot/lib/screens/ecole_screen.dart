@@ -47,7 +47,7 @@ class EcoleScreen extends StatelessWidget {
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(1),
-                    spreadRadius: 3,
+                    spreadRadius: 0,
                     blurRadius: 0,
                     offset: Offset(-5, 5),
                   ),
@@ -55,7 +55,8 @@ class EcoleScreen extends StatelessWidget {
               ),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 233, 217, 230),
+                  //
+                  backgroundColor: const Color(0xFFEDECF8),
                   padding: EdgeInsets.symmetric(vertical: 20.0),
                 ),
                 onPressed: () {},
