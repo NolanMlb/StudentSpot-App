@@ -52,6 +52,38 @@ class PresenceScreen extends StatelessWidget {
                 ),
               ),
             ),
+            Expanded(
+              child: Container(),
+            ),
+            Container(
+              width: 300,
+              color: Colors.black,
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              margin: const EdgeInsets.symmetric(vertical: 60.0),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: const Text(
+                    'Valider',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontFamily: 'Unbounded',
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ));
   }
