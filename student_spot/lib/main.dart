@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student_spot/screens/home_screen.dart';
 import 'package:student_spot/screens/login_screen.dart';
-import 'package:student_spot/screens/ecole_screen.dart';
 
 void main() {
   runApp(const App());

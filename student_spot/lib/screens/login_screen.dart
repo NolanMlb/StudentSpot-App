@@ -1,11 +1,15 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-
 import 'ecole_screen.dart';
+import '../requests/loginRequest.dart';
+import 'package:http/http.dart' as http;
+
+final TextEditingController usernameController = TextEditingController();
+final TextEditingController passwordController = TextEditingController();
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +68,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 TextFormField(
+                  controller: usernameController,
                   decoration: InputDecoration(
                     labelText: 'Nom d\'utilisateur',
                     border: OutlineInputBorder(),
@@ -87,6 +92,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 TextFormField(
+                  controller: passwordController,
                   decoration: InputDecoration(
                     labelText: 'Mot de passe',
                     border: OutlineInputBorder(),
@@ -103,11 +109,40 @@ class LoginScreen extends StatelessWidget {
                     child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
+                        onPressed: () async {
+                          http.Response response =
+                              await LoginRequest.getUserByLoginAndPassword(
+                            usernameController.text,
+                            passwordController.text,
+                          );
+                          if (response.statusCode == 200) {
+                            // ignore: use_build_context_synchronously
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => EcoleScreen()));
+                                  builder: (context) => EcoleScreen()),
+                            );
+                          } else {
+                            // ignore: use_build_context_synchronously
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Erreur de connexion"),
+                                  content: Text(
+                                      "Le nom d'utilisateur ou le mot de passe est incorrect"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("OK"),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black,
