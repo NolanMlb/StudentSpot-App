@@ -23,7 +23,8 @@ class PresenceScreen extends StatelessWidget {
           ),
           centerTitle: true,
         ),
-        body: Column(
+        body: SingleChildScrollView(
+            child: Column(
           children: <Widget>[
             Container(
               margin: const EdgeInsets.only(left: 40.0, top: 30.0),
@@ -52,8 +53,232 @@ class PresenceScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
-              child: Container(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  margin: const EdgeInsets.only(top: 26.0),
+                  width: 160,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD9FFE1),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: const Color(0xFF40734B),
+                      width: 2,
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 12.0),
+                        child: Column(children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.asset(
+                              'assets/img/eleve_test.jpeg',
+                              height: 140.0,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          const Text('Johnny Sins',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: 'Unbounded',
+                                  fontWeight: FontWeight.bold))
+                        ]),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 26.0),
+                  width: 160,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD9FFE1),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: const Color(0xFF40734B),
+                      width: 2,
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 12.0),
+                        child: Column(children: [
+                          ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.asset(
+                                'assets/img/eleve_test.jpeg',
+                                height: 140.0,
+                              )),
+                          const SizedBox(height: 10),
+                          const Text('Johnny Sins',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: 'Unbounded',
+                                  fontWeight: FontWeight.bold))
+                        ]),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  margin: const EdgeInsets.only(top: 26.0),
+                  width: 160,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD9FFE1),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: const Color(0xFF40734B),
+                      width: 2,
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 12.0),
+                        child: Column(children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.asset(
+                              'assets/img/eleve_test.jpeg',
+                              height: 140.0,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          const Text('Johnny Sins',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: 'Unbounded',
+                                  fontWeight: FontWeight.bold))
+                        ]),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 26.0),
+                  width: 160,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD9FFE1),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: const Color(0xFF40734B),
+                      width: 2,
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 12.0),
+                        child: Column(children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.asset(
+                              'assets/img/eleve_test.jpeg',
+                              height: 140.0,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          const Text('Johnny Sins',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: 'Unbounded',
+                                  fontWeight: FontWeight.bold))
+                        ]),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  margin: const EdgeInsets.only(top: 26.0),
+                  width: 160,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD9FFE1),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: const Color(0xFF40734B),
+                      width: 2,
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 12.0),
+                        child: Column(children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.asset(
+                              'assets/img/eleve_test.jpeg',
+                              height: 140.0,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          const Text('Johnny Sins',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: 'Unbounded',
+                                  fontWeight: FontWeight.bold))
+                        ]),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 26.0),
+                  width: 160,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD9FFE1),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: const Color(0xFF40734B),
+                      width: 2,
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 12.0),
+                        child: Column(children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.asset(
+                              'assets/img/eleve_test.jpeg',
+                              height: 140.0,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          const Text('Johnny Sins',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: 'Unbounded',
+                                  fontWeight: FontWeight.bold))
+                        ]),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             Container(
               width: 300,
@@ -85,6 +310,6 @@ class PresenceScreen extends StatelessWidget {
               ),
             ),
           ],
-        ));
+        )));
   }
 }
