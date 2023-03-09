@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'ecole_screen.dart';
 import '../requests/loginRequest.dart';
 import 'package:http/http.dart' as http;
 
@@ -116,11 +117,14 @@ class LoginScreen extends StatelessWidget {
                             passwordController.text,
                           );
                           if (response.statusCode == 200) {
+                            // Récupération de l'ID du groupe de l'utilisateur
+                            int userGroupId =
+                                json.decode(response.body)['id_groupe'];
                             // ignore: use_build_context_synchronously
-                            Navigator.push(
+                            Navigator.pushNamed(
                               context,
-                              MaterialPageRoute(
-                                  builder: (context) => EcoleScreen()),
+                              '/ecole',
+                              arguments: {'userGroupId': userGroupId},
                             );
                           } else {
                             // ignore: use_build_context_synchronously

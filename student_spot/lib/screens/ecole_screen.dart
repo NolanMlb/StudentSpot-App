@@ -1,9 +1,43 @@
 import 'package:flutter/material.dart';
-
+import 'dart:convert';
+import '../requests/ecoleRequest.dart';
+import '../requests/loginRequest.dart';
 import 'presence_screen.dart';
 
-class EcoleScreen extends StatelessWidget {
-  const EcoleScreen({super.key});
+class EcoleScreen extends StatefulWidget {
+  const EcoleScreen({Key? key}) : super(key: key);
+
+  @override
+  EcoleScreenState createState() => EcoleScreenState();
+}
+
+class EcoleScreenState extends State<EcoleScreen> {
+  List<String> _schoolNames = [];
+  int _idGroupe = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSchoolNames();
+  }
+
+  Future<void> _loadSchoolNames() async {
+    // Récupération des arguments passés depuis LoginScreen
+    final Map<String, dynamic> args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    //final int userId = args['userId'];
+    final int userGroupId = args['userGroupId'];
+    try {
+      final schools = await EcoleRequest.getEcoleByIdGroupe(userGroupId)
+          as List<Map<String, dynamic>>;
+      final schoolNames = schools.map((s) => s['nom_ecole'] as String).toList();
+      setState(() {
+        _schoolNames = schoolNames;
+      });
+    } catch (e) {
+      print('Failed to load schools: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,57 +68,57 @@ class EcoleScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 35.0),
-          SizedBox(
-            width: double.infinity,
-            child: Container(
-              margin: const EdgeInsets.only(left: 40.0, right: 30.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(3.0),
-                border: Border.all(
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  width: 1,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(1),
-                    spreadRadius: 0,
-                    blurRadius: 0,
-                    offset: const Offset(-5, 5),
-                  ),
-                ],
-              ),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  //
-                  backgroundColor: const Color(0xFFEDECF8),
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const PresenceScreen()));
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  // ignore: prefer_const_literals_to_create_immutables
-                  children: [
-                    const SizedBox(width: 30.0),
-                    const Text(
-                      'WebTech',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15,
-                        fontFamily: 'Unbounded',
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.none,
-                      ),
+          ..._schoolNames.map((ecole) => SizedBox(
+                width: double.infinity,
+                child: Container(
+                  margin: const EdgeInsets.only(left: 40.0, right: 30.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(3.0),
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 0, 0, 0),
+                      width: 1,
                     ),
-                  ],
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(1),
+                        spreadRadius: 0,
+                        blurRadius: 0,
+                        offset: const Offset(-5, 5),
+                      ),
+                    ],
+                  ),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      //
+                      backgroundColor: const Color(0xFFEDECF8),
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const PresenceScreen()));
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      // ignore: prefer_const_literals_to_create_immutables
+                      children: [
+                        const SizedBox(width: 30.0),
+                        Text(
+                          ecole,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontFamily: 'Unbounded',
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
+              )),
         ],
       ),
     );
