@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import '../requests/ecoleRequest.dart';
-import '../requests/loginRequest.dart';
 import 'presence_screen.dart';
 
 class EcoleScreen extends StatefulWidget {
