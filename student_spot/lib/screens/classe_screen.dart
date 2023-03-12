@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import '../requests/ecoleRequest.dart';
+import '../requests/classeRequest.dart';
+import 'presence_screen.dart';
 
-class EcoleScreen extends StatefulWidget {
-  const EcoleScreen({Key? key}) : super(key: key);
+class ClasseScreen extends StatefulWidget {
+  const ClasseScreen({Key? key}) : super(key: key);
 
   @override
-  EcoleScreenState createState() => EcoleScreenState();
+  ClasseScreenState createState() => ClasseScreenState();
 }
 
-class EcoleScreenState extends State<EcoleScreen> {
-  List<String> _schoolNames = [];
-  List<int> _schoolId = [];
-  int _idGroupe = 0;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _loadSchoolNames();
-  // }
+class ClasseScreenState extends State<ClasseScreen> {
+  List<String> _classNames = [];
+  int _idEcole = 0;
 
   @override
   void didChangeDependencies() {
@@ -26,28 +20,25 @@ class EcoleScreenState extends State<EcoleScreen> {
     // Récupération des arguments passés depuis LoginScreen
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    //final int userId = args['userId'];
-    final int userGroupId = args['userGroupId'];
-    _loadSchoolNames(userGroupId);
+    final int idEcole = args['idEcole'];
+    _loadClassNames(idEcole);
   }
 
-  Future<void> _loadSchoolNames(int userGroupId) async {
-    final Map<String, dynamic> args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final int userGroupId = args['userGroupId'];
+  Future<void> _loadClassNames(int userGroupId) async {
+    final Map<String, dynamic>? args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+    final int idEcole = args?['idEcole'] ?? 0;
 
     try {
-      final response = await EcoleRequest.getEcoleByIdGroupe(userGroupId);
+      final response = await ClasseRequest.getClasseByIdEcole(idEcole);
       final decodedResponse = json.decode(response.body) as List<dynamic>;
       final schoolNames =
-          decodedResponse.map((s) => s['nom_ecole'] as String).toList();
-      final schoolId = decodedResponse.map((s) => s['id'] as int).toList();
+          decodedResponse.map((s) => s['nom_classe'] as String).toList();
       setState(() {
-        _schoolNames = schoolNames;
-        _schoolId = schoolId;
+        _classNames = schoolNames;
       });
     } catch (e) {
-      print('Failed to load schools: $e');
+      print('Failed to load classes: $e');
     }
   }
 
@@ -69,7 +60,7 @@ class EcoleScreenState extends State<EcoleScreen> {
             margin: const EdgeInsets.only(left: 40.0),
             alignment: Alignment.topLeft,
             child: const Text(
-              'Sélectionnez votre école',
+              'Sélectionnez votre classe',
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 16,
@@ -80,8 +71,8 @@ class EcoleScreenState extends State<EcoleScreen> {
             ),
           ),
           const SizedBox(height: 35.0),
-          ..._schoolNames.map(
-            (ecole) => Padding(
+          ..._classNames.map(
+            (classe) => Padding(
                 padding: const EdgeInsets.only(bottom: 30.0),
                 child: SizedBox(
                   width: double.infinity,
@@ -109,17 +100,10 @@ class EcoleScreenState extends State<EcoleScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 20.0),
                       ),
                       onPressed: () {
-                        final int idEcole =
-                            _schoolId[_schoolNames.indexOf(ecole)];
-                        /*Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                ClasseScreen(idEcole: idEcole),
-                          ),
-                        );*/
-                        Navigator.pushNamed(context, '/classe',
-                            arguments: {'idEcole': idEcole});
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const PresenceScreen()));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -127,7 +111,7 @@ class EcoleScreenState extends State<EcoleScreen> {
                         children: [
                           const SizedBox(width: 30.0),
                           Text(
-                            ecole,
+                            utf8.decode(classe.runes.toList()),
                             style: const TextStyle(
                               color: Colors.black,
                               fontSize: 15,

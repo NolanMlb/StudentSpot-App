@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student_spot/screens/ecole_screen.dart';
+import 'package:student_spot/screens/classe_screen.dart';
 import 'package:student_spot/screens/login_screen.dart';
 
 void main() {
@@ -18,6 +19,7 @@ class App extends StatelessWidget {
       routes: {
         '/': (context) => const LoginScreen(),
         '/ecole': (context) => const EcoleScreen(),
+        '/classe': (context) => const ClasseScreen(),
       },
     );
   }
