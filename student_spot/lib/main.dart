@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:student_spot/screens/ecole_screen.dart';
 import 'package:student_spot/screens/classe_screen.dart';
 import 'package:student_spot/screens/login_screen.dart';
+import 'package:student_spot/screens/presence_screen.dart';
+import 'package:student_spot/screens/profil_screen.dart';
+import 'package:student_spot/screens/classe_screen.dart';
 
 void main() {
   runApp(const App());
@@ -19,6 +22,8 @@ class App extends StatelessWidget {
       routes: {
         '/': (context) => const LoginScreen(),
         '/ecole': (context) => const EcoleScreen(),
+        '/presence': (context) => const PresenceScreen(),
+        '/profil': (context) => const ProfilScreen(),
         '/classe': (context) => const ClasseScreen(),
       },
     );
