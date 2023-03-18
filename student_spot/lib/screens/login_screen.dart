@@ -117,14 +117,13 @@ class LoginScreen extends StatelessWidget {
                             passwordController.text,
                           );
                           if (response.statusCode == 200) {
-                            // Récupération de l'ID du groupe de l'utilisateur
-                            int userGroupId =
-                                json.decode(response.body)['id_groupe'];
+                            // Récupération de l'utilisateur
+                            var user = json.decode(response.body);
                             // ignore: use_build_context_synchronously
                             Navigator.pushNamed(
                               context,
                               '/ecole',
-                              arguments: {'userGroupId': userGroupId},
+                              arguments: {'user': user},
                             );
                           } else {
                             // ignore: use_build_context_synchronously

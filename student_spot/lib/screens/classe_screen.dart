@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import '../requests/ecoleRequest.dart';
+import '../requests/classeRequest.dart';
 import '../requests/loginRequest.dart';
 import 'presence_screen.dart';
 import 'profil_screen.dart';
 
-class EcoleScreen extends StatefulWidget {
-  const EcoleScreen({Key? key}) : super(key: key);
+class ClasseScreen extends StatefulWidget {
+  const ClasseScreen({Key? key}) : super(key: key);
 
   @override
-  EcoleScreenState createState() => EcoleScreenState();
+  ClasseScreenState createState() => ClasseScreenState();
 }
 
-class EcoleScreenState extends State<EcoleScreen> {
-  List<dynamic> _schools = [];
-  int _idGroupe = 0;
+class ClasseScreenState extends State<ClasseScreen> {
+  List<dynamic> _classes = [];
+  int _idEcole = 0;
 
   // @override
   // void initState() {
   //   super.initState();
-  //   _loadSchools();
+  //   _loadClasses();
   // }
 
   @override
@@ -30,32 +30,27 @@ class EcoleScreenState extends State<EcoleScreen> {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     //final int userId = args['userId'];
     final user = args['user'];
-    final int userGroupId = user['id_groupe'];
-    _loadSchools(userGroupId);
+    final int idEcole = args['ecole'];
+    _loadClasses(idEcole);
   }
 
-  Future<void> _loadSchools(int userGroupId) async {
-    final Map<String, dynamic> args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final user = args['user'];
-    final int userGroupId = user['id_groupe'];
-
+  Future<void> _loadClasses(int idEcole) async {
     try {
-      final response = await EcoleRequest.getEcoleByIdGroupe(userGroupId);
+      final response = await ClasseRequest.getClasseByIdEcole(idEcole);
       final decodedResponse = json.decode(response.body) as List<dynamic>;
-      final schools = decodedResponse;
+      final classes = decodedResponse;
       setState(() {
-        _schools = schools;
+        _classes = classes;
       });
     } catch (e) {
-      print('Failed to load schools: $e');
+      print('Failed to load classes: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final Map<Object, dynamic> args =
+        ModalRoute.of(context)!.settings.arguments as Map<Object, dynamic>;
     final user = args['user'];
     return Scaffold(
       backgroundColor: Colors.white,
@@ -75,7 +70,7 @@ class EcoleScreenState extends State<EcoleScreen> {
                 margin: const EdgeInsets.only(left: 40.0),
                 alignment: Alignment.topLeft,
                 child: const Text(
-                  'Sélectionnez votre école',
+                  'Sélectionnez votre classe',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 16,
@@ -86,8 +81,8 @@ class EcoleScreenState extends State<EcoleScreen> {
                 ),
               ),
               const SizedBox(height: 35.0),
-              ..._schools.map(
-                (ecole) => Padding(
+              ..._classes.map(
+                (classe) => Padding(
                     padding: const EdgeInsets.only(bottom: 30.0),
                     child: SizedBox(
                       width: double.infinity,
@@ -115,10 +110,11 @@ class EcoleScreenState extends State<EcoleScreen> {
                             padding: const EdgeInsets.symmetric(vertical: 20.0),
                           ),
                           onPressed: () {
-                            Navigator.pushNamed(context, '/classe', arguments: {
-                              'user': user,
-                              'ecole': ecole['id']
-                            });
+                            Navigator.pushNamed(context, '/presence',
+                                arguments: {
+                                  'user': user,
+                                  'classe': classe['id']
+                                });
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -126,7 +122,7 @@ class EcoleScreenState extends State<EcoleScreen> {
                             children: [
                               const SizedBox(width: 30.0),
                               Text(
-                                ecole['nom_ecole'],
+                                classe['nom_classe'],
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 15,
