@@ -14,6 +14,9 @@ class PresenceScreen extends StatefulWidget {
 
 class PresenceScreenState extends State<PresenceScreen> {
   List<dynamic> _eleves = [];
+  List<dynamic> _elevesPresent = [];
+  Color divColor = Color(0xFFFFD9D9);
+  Color borderColor = Color(0xFFCB4D4D);
 
   @override
   void didChangeDependencies() {
@@ -34,7 +37,10 @@ class PresenceScreenState extends State<PresenceScreen> {
       final eleves = decodedResponse;
       setState(() {
         _eleves = eleves;
-        print(_eleves);
+        _eleves.forEach((element) {
+          element['divColor'] = Color(0xFFFFD9D9);
+          element['borderColor'] = Color(0xFFCB4D4D);
+        });
       });
     } catch (e) {
       print('Failed to load eleves: $e');
@@ -107,39 +113,62 @@ class PresenceScreenState extends State<PresenceScreen> {
                                 crossAxisSpacing: 4.0,
                                 mainAxisSpacing: 4.0),
                         itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFD9FFE1),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: const Color(0xFF40734B),
-                                width: 2,
-                              ),
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(top: 12.0),
-                                  child: Column(children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: Image.asset(
-                                        'assets/img/eleve_test.jpeg',
-                                        height: 140.0,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Text(
-                                        "${_eleves[index]['nom_eleve']} ${_eleves[index]['prenom_eleve']}",
-                                        style: const TextStyle(
-                                            fontSize: 16,
-                                            fontFamily: 'Unbounded',
-                                            fontWeight: FontWeight.bold))
-                                  ]),
+                          return GestureDetector(
+                              onTap: () {
+                                // insert eleve in list
+                                if (_elevesPresent.contains(_eleves[index])) {
+                                  setState(() {
+                                    _eleves[index]['divColor'] =
+                                        Color(0xFFFFD9D9);
+                                    _eleves[index]['borderColor'] =
+                                        Color(0xFFCB4D4D);
+                                  });
+                                  _elevesPresent.remove(_eleves[index]);
+                                } else {
+                                  setState(() {
+                                    _eleves[index]['divColor'] =
+                                        Color(0xFFD9FFD9);
+                                    _eleves[index]['borderColor'] =
+                                        Color(0xFF4DCB4D);
+                                  });
+                                  _elevesPresent.add(_eleves[index]);
+                                }
+                              },
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                decoration: BoxDecoration(
+                                  color: _eleves[index]['divColor'],
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: _eleves[index]['borderColor'],
+                                    width: 2,
+                                  ),
                                 ),
-                              ],
-                            ),
-                          );
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 12.0),
+                                      child: Column(children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          child: Image.asset(
+                                            'assets/img/eleve_test.jpeg',
+                                            height: 140.0,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                            "${_eleves[index]['nom_eleve']} ${_eleves[index]['prenom_eleve']}",
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontFamily: 'Unbounded',
+                                                fontWeight: FontWeight.bold))
+                                      ]),
+                                    ),
+                                  ],
+                                ),
+                              ));
                         },
                       ))),
               Container(
@@ -151,7 +180,9 @@ class PresenceScreenState extends State<PresenceScreen> {
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      print(_elevesPresent);
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
