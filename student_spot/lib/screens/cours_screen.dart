@@ -16,10 +16,9 @@ class CoursScreenState extends State<CoursScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Récupération des arguments passés depuis LoginScreen
+    // Récupération des arguments passés depuis ClasseScreen
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    //final int userId = args['userId'];
     final user = args['user'];
     final int idClasse = args['classe'];
     _loadCours(idClasse);
