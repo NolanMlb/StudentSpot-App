@@ -4,7 +4,7 @@ import 'package:student_spot/screens/classe_screen.dart';
 import 'package:student_spot/screens/login_screen.dart';
 import 'package:student_spot/screens/presence_screen.dart';
 import 'package:student_spot/screens/profil_screen.dart';
-import 'package:student_spot/screens/classe_screen.dart';
+import 'package:student_spot/screens/cours_screen.dart';
 
 void main() {
   runApp(const App());
@@ -25,6 +25,7 @@ class App extends StatelessWidget {
         '/presence': (context) => const PresenceScreen(),
         '/profil': (context) => const ProfilScreen(),
         '/classe': (context) => const ClasseScreen(),
+        '/cours': (context) => const CoursScreen()
       },
     );
   }

@@ -1,26 +1,17 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import '../requests/classeRequest.dart';
-import '../requests/loginRequest.dart';
-import 'presence_screen.dart';
-import 'profil_screen.dart';
+import '../requests/coursRequest.dart';
 
-class ClasseScreen extends StatefulWidget {
-  const ClasseScreen({Key? key}) : super(key: key);
+class CoursScreen extends StatefulWidget {
+  const CoursScreen({Key? key}) : super(key: key);
 
   @override
-  ClasseScreenState createState() => ClasseScreenState();
+  CoursScreenState createState() => CoursScreenState();
 }
 
-class ClasseScreenState extends State<ClasseScreen> {
-  List<dynamic> _classes = [];
-  int _idEcole = 0;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _loadClasses();
-  // }
+class CoursScreenState extends State<CoursScreen> {
+  List<dynamic> _cours = [];
+  int idClasse = 0;
 
   @override
   void didChangeDependencies() {
@@ -30,20 +21,20 @@ class ClasseScreenState extends State<ClasseScreen> {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     //final int userId = args['userId'];
     final user = args['user'];
-    final int idEcole = args['ecole'];
-    _loadClasses(idEcole);
+    final int idClasse = args['classe'];
+    _loadCours(idClasse);
   }
 
-  Future<void> _loadClasses(int idEcole) async {
+  Future<void> _loadCours(int idClasse) async {
     try {
-      final response = await ClasseRequest.getClasseByIdEcole(idEcole);
+      final response = await CoursRequest.getCoursByClasse(idClasse);
       final decodedResponse = json.decode(response.body) as List<dynamic>;
-      final classes = decodedResponse;
+      final cours = decodedResponse;
       setState(() {
-        _classes = classes;
+        _cours = cours;
       });
     } catch (e) {
-      print('Failed to load classes: $e');
+      print('Failed to load cours: $e');
     }
   }
 
@@ -70,7 +61,7 @@ class ClasseScreenState extends State<ClasseScreen> {
                 margin: const EdgeInsets.only(left: 40.0),
                 alignment: Alignment.topLeft,
                 child: const Text(
-                  'Sélectionnez votre classe',
+                  'Sélectionnez votre cours',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 16,
@@ -81,8 +72,8 @@ class ClasseScreenState extends State<ClasseScreen> {
                 ),
               ),
               const SizedBox(height: 35.0),
-              ..._classes.map(
-                (classe) => Padding(
+              ..._cours.map(
+                (cours) => Padding(
                     padding: const EdgeInsets.only(bottom: 30.0),
                     child: SizedBox(
                       width: double.infinity,
@@ -110,10 +101,11 @@ class ClasseScreenState extends State<ClasseScreen> {
                             padding: const EdgeInsets.symmetric(vertical: 20.0),
                           ),
                           onPressed: () {
-                            Navigator.pushNamed(context, '/cours', arguments: {
-                              'user': user,
-                              'classe': classe['id']
-                            });
+                            Navigator.pushNamed(context, '/presence',
+                                arguments: {
+                                  'user': user,
+                                  'cours': cours['id']
+                                });
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -122,7 +114,7 @@ class ClasseScreenState extends State<ClasseScreen> {
                               const SizedBox(width: 30.0),
                               Text(
                                 // Décodage des caractères spéciaux du champ nom_classe
-                                utf8.decode(classe['nom_classe'].codeUnits),
+                                utf8.decode(cours['nom_cours'].codeUnits),
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 15,
