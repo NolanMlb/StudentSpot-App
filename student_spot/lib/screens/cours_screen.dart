@@ -13,6 +13,8 @@ class CoursScreenState extends State<CoursScreen> {
   List<dynamic> _cours = [];
   int idClasse = 0;
 
+  var hdebut;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -113,17 +115,49 @@ class CoursScreenState extends State<CoursScreen> {
                             // ignore: prefer_const_literals_to_create_immutables
                             children: [
                               const SizedBox(width: 30.0),
-                              Text(
-                                // Décodage des caractères spéciaux du champ nom_classe
-                                utf8.decode(cours['nom_cours'].codeUnits),
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                  fontFamily: 'Unbounded',
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.none,
-                                ),
-                              ),
+                              Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      // Décodage des caractères spéciaux du champ nom_classe
+                                      utf8.decode(cours['nom_cours'].codeUnits),
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                        fontFamily: 'Unbounded',
+                                        fontWeight: FontWeight.bold,
+                                        decoration: TextDecoration.none,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5.0),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          cours['heure_debut'].replaceAll(
+                                                  "1970-01-01T", "") +
+                                              "   ---   ",
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontFamily: 'Unbounded',
+                                            fontWeight: FontWeight.bold,
+                                            decoration: TextDecoration.none,
+                                          ),
+                                        ),
+                                        Text(
+                                          cours['heure_fin']
+                                              .replaceAll("1970-01-01T", ""),
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontFamily: 'Unbounded',
+                                            fontWeight: FontWeight.bold,
+                                            decoration: TextDecoration.none,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ]),
                             ],
                           ),
                         ),
