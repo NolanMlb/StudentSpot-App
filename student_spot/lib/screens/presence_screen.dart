@@ -27,19 +27,45 @@ class PresenceScreenState extends State<PresenceScreen> {
     //final int userId = args['userId'];
     final user = args['user'];
     final int idClasse = args['classe'];
-    _loadEleves(idClasse);
+    final int idCours = args['cours'];
+    _loadEleves(idClasse, idCours);
   }
 
-  Future<void> _loadEleves(int idClasse) async {
+  Future<void> _loadEleves(int idClasse, int idCours) async {
     try {
       final response = await PresenceRequest.getElevesByIdClasse(idClasse);
+      final responsePresence =
+          await PresenceRequest.getPresenceByIdCours(idCours);
       final decodedResponse = json.decode(response.body) as List<dynamic>;
-      final eleves = decodedResponse;
+      final decodedResponsePresence =
+          json.decode(responsePresence.body) as List<dynamic>;
+      final presence = decodedResponsePresence;
+      List eleves = decodedResponse;
+      for (int i = 0; i < eleves.length; i++) {
+        for (int j = 0; j < presence.length; j++) {
+          if (presence[j]['eleve'] == eleves[i]['id']) {
+            eleves[i]['id_presence'] = presence[j]['id'];
+            eleves[i]['statut_presence'] = presence[j]['statut_presence'];
+            break;
+          }
+        }
+      }
       setState(() {
         _eleves = eleves;
         _eleves.forEach((element) {
-          element['divColor'] = Color(0xFFFFD9D9);
-          element['borderColor'] = Color(0xFFCB4D4D);
+          if (element['statut_presence'] == 'Present') {
+            element['divColor'] = const Color(0xFFD9FFD9);
+            element['borderColor'] = const Color(0xFF4DCB4D);
+          } else {
+            element['divColor'] = const Color(0xFFFFD9D9);
+            element['borderColor'] = const Color(0xFFCB4D4D);
+          }
+          _elevesPresent.add({
+            'id': element['id_presence'],
+            'statut_presence': element['statut_presence'],
+            'eleve': element['id'],
+            'cours': idCours
+          });
         });
       });
     } catch (e) {
@@ -52,6 +78,7 @@ class PresenceScreenState extends State<PresenceScreen> {
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final user = args['user'];
+    final int idCours = args['cours'];
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -116,22 +143,37 @@ class PresenceScreenState extends State<PresenceScreen> {
                           return GestureDetector(
                               onTap: () {
                                 // insert eleve in list
-                                if (_elevesPresent.contains(_eleves[index])) {
+                                if (_eleves[index]['statut_presence'] ==
+                                    'Present') {
                                   setState(() {
                                     _eleves[index]['divColor'] =
-                                        Color(0xFFFFD9D9);
+                                        const Color(0xFFFFD9D9);
                                     _eleves[index]['borderColor'] =
-                                        Color(0xFFCB4D4D);
+                                        const Color(0xFFCB4D4D);
+                                    _eleves[index]['statut_presence'] =
+                                        'Absent';
                                   });
-                                  _elevesPresent.remove(_eleves[index]);
+                                  _eleves[index]['statut_presence'] = 'Absent';
+                                  // change statut_presence to Absent in _elevesPresent
+                                  _elevesPresent
+                                      .firstWhere((e) =>
+                                          e['eleve'] == _eleves[index]['id'])
+                                      .update(
+                                          'statut_presence', (_) => 'Absent');
                                 } else {
                                   setState(() {
                                     _eleves[index]['divColor'] =
                                         Color(0xFFD9FFD9);
                                     _eleves[index]['borderColor'] =
                                         Color(0xFF4DCB4D);
+                                    _eleves[index]['statut_presence'] =
+                                        'Present';
                                   });
-                                  _elevesPresent.add(_eleves[index]);
+                                  _elevesPresent
+                                      .firstWhere((e) =>
+                                          e['eleve'] == _eleves[index]['id'])
+                                      .update(
+                                          'statut_presence', (_) => 'Present');
                                 }
                               },
                               child: AnimatedContainer(
@@ -180,8 +222,10 @@ class PresenceScreenState extends State<PresenceScreen> {
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      print(_elevesPresent);
+                    onPressed: () async {
+                      await PresenceRequest.setPresence(
+                          idCours, _elevesPresent);
+                      Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,

@@ -42,6 +42,7 @@ class CoursScreenState extends State<CoursScreen> {
     final Map<Object, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<Object, dynamic>;
     final user = args['user'];
+    final classe = args['classe'];
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -103,7 +104,8 @@ class CoursScreenState extends State<CoursScreen> {
                             Navigator.pushNamed(context, '/presence',
                                 arguments: {
                                   'user': user,
-                                  'cours': cours['id']
+                                  'cours': cours['id'],
+                                  'classe': classe
                                 });
                           },
                           child: Row(
