@@ -194,10 +194,19 @@ class PresenceScreenState extends State<PresenceScreen> {
                                         ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(20),
-                                          child: Image.asset(
-                                            'assets/img/eleve_test.jpeg',
-                                            height: 140.0,
-                                          ),
+                                          child: _eleves[index]
+                                                      ['eleve_photo'] !=
+                                                  null
+                                              ? Image.asset(
+                                                  'assets/img/eleves_img/${_eleves[index]['eleve_photo']}',
+                                                  height: 140.0,
+                                                )
+                                              : ClipRRect(
+                                                  child: Image.asset(
+                                                    'assets/img/eleve_test.jpeg',
+                                                    height: 140.0,
+                                                  ),
+                                                ),
                                         ),
                                         const SizedBox(height: 10),
                                         Text(
