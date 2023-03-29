@@ -16,19 +16,12 @@ class ClasseScreenState extends State<ClasseScreen> {
   List<dynamic> _classes = [];
   int _idEcole = 0;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _loadClasses();
-  // }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Récupération des arguments passés depuis EcoleScreen
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    //final int userId = args['userId'];
     final user = args['user'];
     final int idEcole = args['ecole'];
     _loadClasses(idEcole);
@@ -36,6 +29,7 @@ class ClasseScreenState extends State<ClasseScreen> {
 
   Future<void> _loadClasses(int idEcole) async {
     try {
+      // get "classe" by idEcole
       final response = await ClasseRequest.getClasseByIdEcole(idEcole);
       final decodedResponse = json.decode(response.body) as List<dynamic>;
       final classes = decodedResponse;
@@ -49,9 +43,11 @@ class ClasseScreenState extends State<ClasseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // get data from previous screen
     final Map<Object, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<Object, dynamic>;
     final user = args['user'];
+    // start of the screen
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -110,6 +106,7 @@ class ClasseScreenState extends State<ClasseScreen> {
                             padding: const EdgeInsets.symmetric(vertical: 20.0),
                           ),
                           onPressed: () {
+                            // Redirect to "cours" screen
                             Navigator.pushNamed(context, '/cours', arguments: {
                               'user': user,
                               'classe': classe['id']
@@ -121,7 +118,7 @@ class ClasseScreenState extends State<ClasseScreen> {
                             children: [
                               const SizedBox(width: 30.0),
                               Text(
-                                // Décodage des caractères spéciaux du champ nom_classe
+                                // Decoding of special characters in the class_name field
                                 utf8.decode(classe['nom_classe'].codeUnits),
                                 style: const TextStyle(
                                   color: Colors.black,
@@ -173,6 +170,7 @@ class ClasseScreenState extends State<ClasseScreen> {
                   ElevatedButton(
                       onPressed: () {
                         Navigator.maybePop(context);
+                        // Redirect to "profil" screen
                         Navigator.pushNamed(context, '/profil',
                             arguments: {'user': user});
                       },

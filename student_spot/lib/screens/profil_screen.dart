@@ -16,7 +16,9 @@ class ProfilScreenState extends State<ProfilScreen> {
   Widget build(BuildContext context) {
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    // we get the data from the previous screen
     final user = args['user'];
+    // start of the screen
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -78,6 +80,7 @@ class ProfilScreenState extends State<ProfilScreen> {
                   Container(
                     margin: const EdgeInsets.only(left: 40.0, top: 10.0),
                     alignment: Alignment.topLeft,
+                    // Affichage du prénom de l'utilisateur
                     child: Text(
                       'Prénom: ${user['prenom']}',
                       style: const TextStyle(
@@ -93,6 +96,7 @@ class ProfilScreenState extends State<ProfilScreen> {
                     margin: const EdgeInsets.symmetric(vertical: 60.0),
                     child: ElevatedButton(
                       onPressed: () {
+                        // Disconnect the user
                         Navigator.pushNamed(context, '/');
                       },
                       style: ElevatedButton.styleFrom(
@@ -143,6 +147,7 @@ class ProfilScreenState extends State<ProfilScreen> {
                 children: [
                   ElevatedButton(
                       onPressed: () {
+                        // redirect to the school screen
                         Navigator.pushNamed(context, '/ecole',
                             arguments: {'user': user});
                       },
