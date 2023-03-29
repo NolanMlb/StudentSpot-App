@@ -138,8 +138,8 @@ class PresenceScreenState extends State<PresenceScreen> {
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
-                                crossAxisSpacing: 4.0,
-                                mainAxisSpacing: 4.0),
+                                crossAxisSpacing: 10.0,
+                                mainAxisSpacing: 10.0),
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                               onTap: () {
@@ -200,19 +200,32 @@ class PresenceScreenState extends State<PresenceScreen> {
                                                   null
                                               ? Image.asset(
                                                   "assets/img/eleves_img/${_eleves[index]['eleve_photo']}",
-                                                  height: 140.0)
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.17,
+                                                )
                                               : ClipRRect(
                                                   child: Image.asset(
                                                     'assets/img/eleve_test.jpeg',
-                                                    height: 140.0,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.004,
                                                   ),
                                                 ),
                                         ),
-                                        const SizedBox(height: 10),
+                                        SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.004,
+                                        ),
                                         Text(
                                             "${_eleves[index]['nom_eleve']} ${_eleves[index]['prenom_eleve']}",
                                             style: const TextStyle(
-                                                fontSize: 15,
+                                                fontSize: 14,
                                                 fontFamily: 'Unbounded',
                                                 fontWeight: FontWeight.bold))
                                       ]),
