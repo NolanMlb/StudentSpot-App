@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -198,9 +199,8 @@ class PresenceScreenState extends State<PresenceScreen> {
                                                       ['eleve_photo'] !=
                                                   null
                                               ? Image.asset(
-                                                  'assets/img/eleves_img/${_eleves[index]['eleve_photo']}',
-                                                  height: 140.0,
-                                                )
+                                                  "assets/img/eleves_img/${_eleves[index]['eleve_photo']}",
+                                                  height: 140.0)
                                               : ClipRRect(
                                                   child: Image.asset(
                                                     'assets/img/eleve_test.jpeg',
@@ -212,7 +212,7 @@ class PresenceScreenState extends State<PresenceScreen> {
                                         Text(
                                             "${_eleves[index]['nom_eleve']} ${_eleves[index]['prenom_eleve']}",
                                             style: const TextStyle(
-                                                fontSize: 16,
+                                                fontSize: 15,
                                                 fontFamily: 'Unbounded',
                                                 fontWeight: FontWeight.bold))
                                       ]),
