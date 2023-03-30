@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'presence_screen.dart';
 import 'login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilScreen extends StatefulWidget {
   const ProfilScreen({Key? key}) : super(key: key);
@@ -12,6 +14,25 @@ class ProfilScreen extends StatefulWidget {
 }
 
 class ProfilScreenState extends State<ProfilScreen> {
+  late SharedPreferences prefs;
+  String? token;
+  Map<String, dynamic> userInfo = {};
+
+  @override
+  void initState() {
+    super.initState();
+    initPreferences();
+  }
+
+  Future<void> initPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token');
+    // Décodage du token
+    final decodedToken = JwtDecoder.decode(token!);
+    userInfo = decodedToken['user'];
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> args =
@@ -51,7 +72,7 @@ class ProfilScreenState extends State<ProfilScreen> {
                 margin: const EdgeInsets.only(left: 40.0, top: 10.0),
                 alignment: Alignment.topLeft,
                 child: Text(
-                  'Nom d\'utilisateur: ${user['login']}',
+                  'Nom d\'utilisateur: ${userInfo['login']}',
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 14,
@@ -66,7 +87,7 @@ class ProfilScreenState extends State<ProfilScreen> {
                     margin: const EdgeInsets.only(left: 40.0, top: 10.0),
                     alignment: Alignment.topLeft,
                     child: Text(
-                      'Nom: ${user['nom']}',
+                      'Nom: ${userInfo['nom']}',
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 14,
@@ -79,7 +100,7 @@ class ProfilScreenState extends State<ProfilScreen> {
                     margin: const EdgeInsets.only(left: 40.0, top: 10.0),
                     alignment: Alignment.topLeft,
                     child: Text(
-                      'Prénom: ${user['prenom']}',
+                      'Prénom: ${userInfo['prenom']}',
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 14,
@@ -92,7 +113,10 @@ class ProfilScreenState extends State<ProfilScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     margin: const EdgeInsets.symmetric(vertical: 60.0),
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        // Suppression du token
+                        await prefs.remove('token');
+                        // Redirection vers la page de connexion
                         Navigator.pushNamed(context, '/');
                       },
                       style: ElevatedButton.styleFrom(

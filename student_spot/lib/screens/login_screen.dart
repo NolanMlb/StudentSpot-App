@@ -5,6 +5,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../requests/loginRequest.dart';
 import 'package:http/http.dart' as http;
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final TextEditingController usernameController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
@@ -117,8 +119,16 @@ class LoginScreen extends StatelessWidget {
                             passwordController.text,
                           );
                           if (response.statusCode == 200) {
-                            // Récupération de l'utilisateur
-                            var user = json.decode(response.body);
+                            // Récupération du token JWT
+                            var token = response.body;
+                            // Stockage du token dans le cache
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            await prefs.setString('token', token);
+                            // Décodage du token JWT
+                            var decodedToken = JwtDecoder.decode(token);
+                            // Récupération des informations de l'utilisateur
+                            var user = decodedToken['user'];
                             // ignore: use_build_context_synchronously
                             Navigator.pushNamed(
                               context,
