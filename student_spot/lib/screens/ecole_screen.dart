@@ -4,6 +4,8 @@ import '../requests/ecoleRequest.dart';
 import '../requests/loginRequest.dart';
 import 'presence_screen.dart';
 import 'profil_screen.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EcoleScreen extends StatefulWidget {
   const EcoleScreen({Key? key}) : super(key: key);
@@ -13,33 +15,40 @@ class EcoleScreen extends StatefulWidget {
 }
 
 class EcoleScreenState extends State<EcoleScreen> {
+  late SharedPreferences prefs;
+  String? token;
+  Map<String, dynamic> userInfo = {};
   List<dynamic> _schools = [];
-  int _idGroupe = 0;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _loadSchools();
-  // }
 
   @override
-  void didChangeDependencies() {
+  void initState() {
+    super.initState();
+    initPreferences();
+  }
+
+  Future<int> initPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token');
+    // Décodage du token
+    final userInfo = JwtDecoder.decode(token!);
+    setState(() {});
+    final int userGroupId = userInfo['groupe'];
+    return userGroupId;
+  }
+
+  @override
+  void didChangeDependencies() async {
     super.didChangeDependencies();
     // Récupération des arguments passés depuis LoginScreen
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    //final int userId = args['userId'];
-    final user = args['user'];
-    final int userGroupId = user['id_groupe'];
+    final int userGroupId = await initPreferences();
     _loadSchools(userGroupId);
   }
 
   Future<void> _loadSchools(int userGroupId) async {
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final user = args['user'];
-    final int userGroupId = user['id_groupe'];
-
     try {
       final response = await EcoleRequest.getEcoleByIdGroupe(userGroupId);
       final decodedResponse = json.decode(response.body) as List<dynamic>;
@@ -56,7 +65,6 @@ class EcoleScreenState extends State<EcoleScreen> {
   Widget build(BuildContext context) {
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final user = args['user'];
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -115,10 +123,8 @@ class EcoleScreenState extends State<EcoleScreen> {
                             padding: const EdgeInsets.symmetric(vertical: 20.0),
                           ),
                           onPressed: () {
-                            Navigator.pushNamed(context, '/classe', arguments: {
-                              'user': user,
-                              'ecole': ecole['id']
-                            });
+                            Navigator.pushNamed(context, '/classe',
+                                arguments: {'ecole': ecole['id']});
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -177,8 +183,7 @@ class EcoleScreenState extends State<EcoleScreen> {
                   ElevatedButton(
                       onPressed: () {
                         Navigator.maybePop(context);
-                        Navigator.pushNamed(context, '/profil',
-                            arguments: {'user': user});
+                        Navigator.pushNamed(context, '/profil');
                       },
                       child: Icon(Icons.person, color: Colors.black),
                       style: ElevatedButton.styleFrom(

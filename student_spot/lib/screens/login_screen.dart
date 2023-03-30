@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../requests/loginRequest.dart';
 import 'package:http/http.dart' as http;
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final TextEditingController usernameController = TextEditingController();
@@ -125,16 +124,8 @@ class LoginScreen extends StatelessWidget {
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
                             await prefs.setString('token', token);
-                            // Décodage du token JWT
-                            var decodedToken = JwtDecoder.decode(token);
-                            // Récupération des informations de l'utilisateur
-                            var user = decodedToken['user'];
                             // ignore: use_build_context_synchronously
-                            Navigator.pushNamed(
-                              context,
-                              '/ecole',
-                              arguments: {'user': user},
-                            );
+                            Navigator.pushNamed(context, '/ecole');
                           } else {
                             // ignore: use_build_context_synchronously
                             showDialog(
