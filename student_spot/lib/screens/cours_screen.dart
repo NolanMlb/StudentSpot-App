@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import '../requests/coursRequest.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CoursScreen extends StatefulWidget {
   const CoursScreen({Key? key}) : super(key: key);
@@ -10,30 +12,59 @@ class CoursScreen extends StatefulWidget {
 }
 
 class CoursScreenState extends State<CoursScreen> {
+  late SharedPreferences prefs;
+  String? token;
+  Map<String, dynamic> userInfo = {};
   List<dynamic> _cours = [];
   int idClasse = 0;
-
   var hdebut;
 
   @override
-  void didChangeDependencies() {
+  void initState() {
+    super.initState();
+    initPreferences();
+  }
+
+  Future<Map<String, dynamic>> initPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token');
+    // Décodage du token
+    final userInfo = JwtDecoder.decode(token!);
+    setState(() {});
+    return userInfo;
+  }
+
+  @override
+  void didChangeDependencies() async {
     super.didChangeDependencies();
     // Récupération des arguments passés depuis ClasseScreen
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final user = args['user'];
     final int idClasse = args['classe'];
-    _loadCours(idClasse);
+    final Map<String, dynamic> userInfo = await initPreferences();
+    final int userRoleId = userInfo['role'];
+    final int userId = userInfo['id'];
+    _loadCours(idClasse, userRoleId, userId);
   }
 
-  Future<void> _loadCours(int idClasse) async {
+  Future<void> _loadCours(int idClasse, int userRoleId, int userId) async {
     try {
-      final response = await CoursRequest.getCoursByClasse(idClasse);
-      final decodedResponse = json.decode(response.body) as List<dynamic>;
-      final cours = decodedResponse;
-      setState(() {
-        _cours = cours;
-      });
+      if (userRoleId == 3) {
+        final response =
+            await CoursRequest.getCoursByIntervenant(idClasse, userId);
+        final decodedResponse = json.decode(response.body) as List<dynamic>;
+        final cours = decodedResponse;
+        setState(() {
+          _cours = cours;
+        });
+      } else {
+        final response = await CoursRequest.getCoursByClasse(idClasse);
+        final decodedResponse = json.decode(response.body) as List<dynamic>;
+        final cours = decodedResponse;
+        setState(() {
+          _cours = cours;
+        });
+      }
     } catch (e) {
       print('Failed to load cours: $e');
     }
@@ -43,7 +74,6 @@ class CoursScreenState extends State<CoursScreen> {
   Widget build(BuildContext context) {
     final Map<Object, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<Object, dynamic>;
-    final user = args['user'];
     final classe = args['classe'];
     return Scaffold(
       backgroundColor: Colors.white,
@@ -105,7 +135,6 @@ class CoursScreenState extends State<CoursScreen> {
                           onPressed: () {
                             Navigator.pushNamed(context, '/presence',
                                 arguments: {
-                                  'user': user,
                                   'cours': cours['id'],
                                   'classe': classe
                                 });
@@ -200,8 +229,7 @@ class CoursScreenState extends State<CoursScreen> {
                   ElevatedButton(
                       onPressed: () {
                         Navigator.maybePop(context);
-                        Navigator.pushNamed(context, '/profil',
-                            arguments: {'user': user});
+                        Navigator.pushNamed(context, '/profil');
                       },
                       child: Icon(Icons.person, color: Colors.black),
                       style: ElevatedButton.styleFrom(

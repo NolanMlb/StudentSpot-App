@@ -21,23 +21,20 @@ class ProfilScreenState extends State<ProfilScreen> {
   @override
   void initState() {
     super.initState();
-    initPreferences();
-  }
-
-  Future<void> initPreferences() async {
-    prefs = await SharedPreferences.getInstance();
-    token = prefs.getString('token');
-    // Décodage du token
-    final decodedToken = JwtDecoder.decode(token!);
-    userInfo = decodedToken['user'];
-    setState(() {});
+    SharedPreferences.getInstance().then((SharedPreferences pref) {
+      setState(() {
+        this.prefs = pref;
+        token = prefs.getString('token');
+        // Décodage du token
+        userInfo = JwtDecoder.decode(token!);
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final user = args['user'];
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -72,7 +69,7 @@ class ProfilScreenState extends State<ProfilScreen> {
                 margin: const EdgeInsets.only(left: 40.0, top: 10.0),
                 alignment: Alignment.topLeft,
                 child: Text(
-                  'Nom d\'utilisateur: ${userInfo['login']}',
+                  'Nom d\'utilisateur: ${userInfo['sub']}',
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 14,
@@ -167,8 +164,7 @@ class ProfilScreenState extends State<ProfilScreen> {
                 children: [
                   ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/ecole',
-                            arguments: {'user': user});
+                        Navigator.pushNamed(context, '/ecole');
                       },
                       child: Icon(Icons.check_box, color: Colors.black),
                       style: ElevatedButton.styleFrom(

@@ -14,13 +14,6 @@ class ClasseScreen extends StatefulWidget {
 
 class ClasseScreenState extends State<ClasseScreen> {
   List<dynamic> _classes = [];
-  int _idEcole = 0;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _loadClasses();
-  // }
 
   @override
   void didChangeDependencies() {
@@ -28,8 +21,6 @@ class ClasseScreenState extends State<ClasseScreen> {
     // Récupération des arguments passés depuis EcoleScreen
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    //final int userId = args['userId'];
-    final user = args['user'];
     final int idEcole = args['ecole'];
     _loadClasses(idEcole);
   }
@@ -51,7 +42,6 @@ class ClasseScreenState extends State<ClasseScreen> {
   Widget build(BuildContext context) {
     final Map<Object, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<Object, dynamic>;
-    final user = args['user'];
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -110,10 +100,8 @@ class ClasseScreenState extends State<ClasseScreen> {
                             padding: const EdgeInsets.symmetric(vertical: 20.0),
                           ),
                           onPressed: () {
-                            Navigator.pushNamed(context, '/cours', arguments: {
-                              'user': user,
-                              'classe': classe['id']
-                            });
+                            Navigator.pushNamed(context, '/cours',
+                                arguments: {'classe': classe['id']});
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -173,8 +161,7 @@ class ClasseScreenState extends State<ClasseScreen> {
                   ElevatedButton(
                       onPressed: () {
                         Navigator.maybePop(context);
-                        Navigator.pushNamed(context, '/profil',
-                            arguments: {'user': user});
+                        Navigator.pushNamed(context, '/profil');
                       },
                       child: Icon(Icons.person, color: Colors.black),
                       style: ElevatedButton.styleFrom(
