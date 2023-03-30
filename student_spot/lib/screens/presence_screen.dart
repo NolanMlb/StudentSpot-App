@@ -135,7 +135,8 @@ class PresenceScreenState extends State<PresenceScreen> {
               ),
               Expanded(
                   child: Container(
-                      padding: const EdgeInsets.all(12.0),
+                      margin: const EdgeInsets.only(top: 10.0),
+                      padding: const EdgeInsets.only(left: 10, right: 10),
                       child: GridView.builder(
                         // grid view of students with their presence status
                         itemCount: _eleves.length,
@@ -195,7 +196,7 @@ class PresenceScreenState extends State<PresenceScreen> {
                                 child: Column(
                                   children: [
                                     Container(
-                                      margin: const EdgeInsets.only(top: 12.0),
+                                      margin: const EdgeInsets.only(top: 7.0),
                                       child: Column(children: [
                                         ClipRRect(
                                             borderRadius:

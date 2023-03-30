@@ -86,19 +86,26 @@ class CoursScreenState extends State<CoursScreen> {
     final classe = args['classe'];
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Image.asset(
+          'assets/img/logo.png', // Chemin d'accès au fichier du logo
+          fit: BoxFit.contain, // Ajuster la taille du logo
+          height: 48.0, // Hauteur maximale du logo
+        ),
+        centerTitle: true,
+      ),
       body: Stack(
         children: [
           Column(
             children: <Widget>[
-              // Set the default margin height
-              const SizedBox(height: 80.0),
-              Center(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                  // Show the logo
-                  child: Image.asset('assets/img/logo.png', height: 48),
-                ),
-              ),
               const SizedBox(height: 35.0),
               Container(
                 // Show the title of the page
@@ -115,7 +122,21 @@ class CoursScreenState extends State<CoursScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 35.0),
+              _cours.isEmpty
+                  ? Container(
+                      margin: const EdgeInsets.only(top: 30.0),
+                      alignment: Alignment.center,
+                      child: const Text(
+                        'Vous n\'avez pas encore de cours',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                          fontFamily: 'Unbounded',
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                    )
+                  : const SizedBox(height: 35.0),
               // For each lesson, show a button
               ..._cours.map(
                 (cours) => Padding(
