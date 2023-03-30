@@ -43,6 +43,7 @@ class ClasseScreenState extends State<ClasseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // get data from previous screen
     final Map<Object, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<Object, dynamic>;
     return Scaffold(

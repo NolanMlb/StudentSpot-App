@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class PresenceScreenState extends State<PresenceScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Récupération des arguments passés depuis LoginScreen
+    // Get data from previous screen
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final int idClasse = args['classe'];
@@ -31,7 +32,9 @@ class PresenceScreenState extends State<PresenceScreen> {
 
   Future<void> _loadEleves(int idClasse, int idCours) async {
     try {
+      // get students by idClasse
       final response = await PresenceRequest.getElevesByIdClasse(idClasse);
+      // get list of "presence" by idCours
       final responsePresence =
           await PresenceRequest.getPresenceByIdCours(idCours);
       final decodedResponse = json.decode(response.body) as List<dynamic>;
@@ -39,6 +42,7 @@ class PresenceScreenState extends State<PresenceScreen> {
           json.decode(responsePresence.body) as List<dynamic>;
       final presence = decodedResponsePresence;
       List eleves = decodedResponse;
+      // add id_presence and statut_presence to each student
       for (int i = 0; i < eleves.length; i++) {
         for (int j = 0; j < presence.length; j++) {
           if (presence[j]['eleve'] == eleves[i]['id']) {
@@ -50,6 +54,7 @@ class PresenceScreenState extends State<PresenceScreen> {
       }
       setState(() {
         _eleves = eleves;
+        // add divColor and borderColor to each student
         _eleves.forEach((element) {
           if (element['statut_presence'] == 'Present') {
             element['divColor'] = const Color(0xFFD9FFD9);
@@ -58,6 +63,7 @@ class PresenceScreenState extends State<PresenceScreen> {
             element['divColor'] = const Color(0xFFFFD9D9);
             element['borderColor'] = const Color(0xFFCB4D4D);
           }
+          // add student to list of present students
           _elevesPresent.add({
             'id': element['id_presence'],
             'statut_presence': element['statut_presence'],
@@ -76,6 +82,7 @@ class PresenceScreenState extends State<PresenceScreen> {
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final int idCours = args['cours'];
+    // start of the screen
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -130,16 +137,17 @@ class PresenceScreenState extends State<PresenceScreen> {
                   child: Container(
                       padding: const EdgeInsets.all(12.0),
                       child: GridView.builder(
+                        // grid view of students with their presence status
                         itemCount: _eleves.length,
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
-                                crossAxisSpacing: 4.0,
-                                mainAxisSpacing: 4.0),
+                                crossAxisSpacing: 10.0,
+                                mainAxisSpacing: 10.0),
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                               onTap: () {
-                                // insert eleve in list
+                                // change the color of the container and the status on click
                                 if (_eleves[index]['statut_presence'] ==
                                     'Present') {
                                   setState(() {
@@ -151,7 +159,7 @@ class PresenceScreenState extends State<PresenceScreen> {
                                         'Absent';
                                   });
                                   _eleves[index]['statut_presence'] = 'Absent';
-                                  // change statut_presence to Absent in _elevesPresent
+                                  // set statut_presence to Absent in _elevesPresent
                                   _elevesPresent
                                       .firstWhere((e) =>
                                           e['eleve'] == _eleves[index]['id'])
@@ -166,6 +174,7 @@ class PresenceScreenState extends State<PresenceScreen> {
                                     _eleves[index]['statut_presence'] =
                                         'Present';
                                   });
+                                  // set statut_presence to Present in _elevesPresent
                                   _elevesPresent
                                       .firstWhere((e) =>
                                           e['eleve'] == _eleves[index]['id'])
@@ -189,27 +198,26 @@ class PresenceScreenState extends State<PresenceScreen> {
                                       margin: const EdgeInsets.only(top: 12.0),
                                       child: Column(children: [
                                         ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          child: _eleves[index]
-                                                      ['eleve_photo'] !=
-                                                  null
-                                              ? Image.asset(
-                                                  'assets/img/eleves_img/${_eleves[index]['eleve_photo']}',
-                                                  height: 140.0,
-                                                )
-                                              : ClipRRect(
-                                                  child: Image.asset(
-                                                    'assets/img/eleve_test.jpeg',
-                                                    height: 140.0,
-                                                  ),
-                                                ),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            // display student's image
+                                            child: Image.asset(
+                                                "assets/img/eleves_img/${_eleves[index]['eleve_photo']}",
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.17)),
+                                        SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.004,
                                         ),
-                                        const SizedBox(height: 10),
+                                        // display student's name
                                         Text(
                                             "${_eleves[index]['nom_eleve']} ${_eleves[index]['prenom_eleve']}",
                                             style: const TextStyle(
-                                                fontSize: 16,
+                                                fontSize: 14,
                                                 fontFamily: 'Unbounded',
                                                 fontWeight: FontWeight.bold))
                                       ]),
@@ -229,6 +237,7 @@ class PresenceScreenState extends State<PresenceScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
+                      // request to set presence of the students
                       await PresenceRequest.setPresence(
                           idCours, _elevesPresent);
                       Navigator.pop(context);

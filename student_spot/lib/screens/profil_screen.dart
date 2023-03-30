@@ -33,8 +33,7 @@ class ProfilScreenState extends State<ProfilScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    // start of the screen
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -96,6 +95,7 @@ class ProfilScreenState extends State<ProfilScreen> {
                   Container(
                     margin: const EdgeInsets.only(left: 40.0, top: 10.0),
                     alignment: Alignment.topLeft,
+                    // Affichage du prénom de l'utilisateur
                     child: Text(
                       'Prénom: ${userInfo['prenom']}',
                       style: const TextStyle(
@@ -111,13 +111,13 @@ class ProfilScreenState extends State<ProfilScreen> {
                     margin: const EdgeInsets.symmetric(vertical: 60.0),
                     child: ElevatedButton(
                       onPressed: () async {
-                        // Suppression du token
+                        // Delete token
                         await prefs.remove('token');
-                        // Redirection vers la page de connexion
+                        // Redirect to login page
                         Navigator.pushNamed(context, '/');
                       },
                       style: ElevatedButton.styleFrom(
-                        // couleur du bouton
+                        // btn color
                         primary: Colors.black,
                         fixedSize: const Size(200, 50),
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
