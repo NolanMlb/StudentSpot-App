@@ -25,7 +25,6 @@ class PresenceScreenState extends State<PresenceScreen> {
     // Get data from previous screen
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final user = args['user'];
     final int idClasse = args['classe'];
     final int idCours = args['cours'];
     _loadEleves(idClasse, idCours);
@@ -82,8 +81,6 @@ class PresenceScreenState extends State<PresenceScreen> {
   Widget build(BuildContext context) {
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    // get data from previous screen
-    final user = args['user'];
     final int idCours = args['cours'];
     // start of the screen
     return Scaffold(
@@ -301,9 +298,7 @@ class PresenceScreenState extends State<PresenceScreen> {
                   ElevatedButton(
                       onPressed: () {
                         Navigator.maybePop(context);
-                        // go to the profil page
-                        Navigator.pushNamed(context, '/profil',
-                            arguments: {'user': user});
+                        Navigator.pushNamed(context, '/profil');
                       },
                       child: Icon(Icons.person, color: Colors.black),
                       style: ElevatedButton.styleFrom(

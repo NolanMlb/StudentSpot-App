@@ -4,6 +4,8 @@ import '../requests/ecoleRequest.dart';
 import '../requests/loginRequest.dart';
 import 'presence_screen.dart';
 import 'profil_screen.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EcoleScreen extends StatefulWidget {
   const EcoleScreen({Key? key}) : super(key: key);
@@ -13,36 +15,47 @@ class EcoleScreen extends StatefulWidget {
 }
 
 class EcoleScreenState extends State<EcoleScreen> {
+  late SharedPreferences prefs;
+  String? token;
+  Map<String, dynamic> userInfo = {};
   List<dynamic> _schools = [];
-  int _idGroupe = 0;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _loadSchools();
-  // }
 
   @override
-  void didChangeDependencies() {
+  void initState() {
+    super.initState();
+    initPreferences();
+  }
+
+  Future<int> initPreferences() async {
+    // Extract the token from the shared preferences
+    prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token');
+    // Decode the token to get the user informations
+    final userInfo = JwtDecoder.decode(token!);
+    setState(() {});
+    // Get the group id of the user
+    final int userGroupId = userInfo['groupe'];
+    return userGroupId;
+  }
+
+  @override
+  void didChangeDependencies() async {
     super.didChangeDependencies();
-    // Récupération des arguments passés depuis LoginScreen
+    // Get the arguments passed from LoginScreen
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    //final int userId = args['userId'];
-    final user = args['user'];
-    final int userGroupId = user['id_groupe'];
+    // Get the group id of the user
+    final int userGroupId = await initPreferences();
+    // Call the function to load the schools according to the user group id
     _loadSchools(userGroupId);
   }
 
   Future<void> _loadSchools(int userGroupId) async {
-    final Map<String, dynamic> args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final user = args['user'];
-    final int userGroupId = user['id_groupe'];
-
     try {
+      // Call the flutter request to get the shools
       final response = await EcoleRequest.getEcoleByIdGroupe(userGroupId);
       final decodedResponse = json.decode(response.body) as List<dynamic>;
+      // Put the scools list in a variable
       final schools = decodedResponse;
       setState(() {
         _schools = schools;
@@ -56,22 +69,25 @@ class EcoleScreenState extends State<EcoleScreen> {
   Widget build(BuildContext context) {
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final user = args['user'];
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
         children: [
           Column(
             children: <Widget>[
+              // Set the start margin height
               const SizedBox(height: 80.0),
               Center(
+                // Show the logo
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Image.asset('assets/img/logo.png', height: 48),
                 ),
               ),
               const SizedBox(height: 35.0),
+              // Show the title of the page
               Container(
+                // Set margin to the left
                 margin: const EdgeInsets.only(left: 40.0),
                 alignment: Alignment.topLeft,
                 child: const Text(
@@ -85,20 +101,28 @@ class EcoleScreenState extends State<EcoleScreen> {
                   ),
                 ),
               ),
+              // Set the margin between the title and the list of schools
               const SizedBox(height: 35.0),
+              // For each school, show a button
               ..._schools.map(
                 (ecole) => Padding(
+                    // Padding between schools
                     padding: const EdgeInsets.only(bottom: 30.0),
+                    // Set the button width to the full width of the screen
                     child: SizedBox(
                       width: double.infinity,
                       child: Container(
+                        // Set the margin to the left and right
                         margin: const EdgeInsets.only(left: 40.0, right: 30.0),
                         decoration: BoxDecoration(
+                          // Set the border radius
                           borderRadius: BorderRadius.circular(3.0),
                           border: Border.all(
+                            // Set the border color
                             color: const Color.fromARGB(255, 0, 0, 0),
                             width: 1,
                           ),
+                          // Set the shadow of the button
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(1),
@@ -110,21 +134,24 @@ class EcoleScreenState extends State<EcoleScreen> {
                         ),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            //
+                            // Set the background color of the button plus the height
                             backgroundColor: const Color(0xFFEDECF8),
                             padding: const EdgeInsets.symmetric(vertical: 20.0),
                           ),
+                          // Set the action when the button is pressed
                           onPressed: () {
-                            Navigator.pushNamed(context, '/classe', arguments: {
-                              'user': user,
-                              'ecole': ecole['id']
-                            });
+                            // Navigate to the classe screen and pass the school id
+                            Navigator.pushNamed(context, '/classe',
+                                arguments: {'ecole': ecole['id']});
                           },
                           child: Row(
+                            // Set the alignment of the text to the left
                             mainAxisAlignment: MainAxisAlignment.start,
                             // ignore: prefer_const_literals_to_create_immutables
                             children: [
+                              // Set the margin of the text
                               const SizedBox(width: 30.0),
+                              // Show the school name
                               Text(
                                 ecole['nom_ecole'],
                                 style: const TextStyle(
@@ -143,6 +170,7 @@ class EcoleScreenState extends State<EcoleScreen> {
               ),
             ],
           ),
+          // Set the position and style of the bottom buttons
           Positioned(
             left: 110,
             right: 110,
@@ -176,9 +204,9 @@ class EcoleScreenState extends State<EcoleScreen> {
                           ))),
                   ElevatedButton(
                       onPressed: () {
+                        // Redirect to the profil screen
                         Navigator.maybePop(context);
-                        Navigator.pushNamed(context, '/profil',
-                            arguments: {'user': user});
+                        Navigator.pushNamed(context, '/profil');
                       },
                       child: Icon(Icons.person, color: Colors.black),
                       style: ElevatedButton.styleFrom(

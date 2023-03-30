@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'package:flutter/material.dart';
 import 'package:student_spot/screens/ecole_screen.dart';
 import 'package:student_spot/screens/classe_screen.dart';
@@ -11,7 +12,7 @@ void main() {
 }
 
 class App extends StatelessWidget {
-  const App({super.key});
+  const App({Key key});
 
 // This widget is the root of your application.
   @override

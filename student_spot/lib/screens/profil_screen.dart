@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'presence_screen.dart';
 import 'login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilScreen extends StatefulWidget {
   const ProfilScreen({Key? key}) : super(key: key);
@@ -12,12 +14,25 @@ class ProfilScreen extends StatefulWidget {
 }
 
 class ProfilScreenState extends State<ProfilScreen> {
+  late SharedPreferences prefs;
+  String? token;
+  Map<String, dynamic> userInfo = {};
+
+  @override
+  void initState() {
+    super.initState();
+    SharedPreferences.getInstance().then((SharedPreferences pref) {
+      setState(() {
+        this.prefs = pref;
+        token = prefs.getString('token');
+        // Décodage du token
+        userInfo = JwtDecoder.decode(token!);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    // we get the data from the previous screen
-    final user = args['user'];
     // start of the screen
     return Scaffold(
       backgroundColor: Colors.white,
@@ -53,7 +68,7 @@ class ProfilScreenState extends State<ProfilScreen> {
                 margin: const EdgeInsets.only(left: 40.0, top: 10.0),
                 alignment: Alignment.topLeft,
                 child: Text(
-                  'Nom d\'utilisateur: ${user['login']}',
+                  'Nom d\'utilisateur: ${userInfo['sub']}',
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 14,
@@ -68,7 +83,7 @@ class ProfilScreenState extends State<ProfilScreen> {
                     margin: const EdgeInsets.only(left: 40.0, top: 10.0),
                     alignment: Alignment.topLeft,
                     child: Text(
-                      'Nom: ${user['nom']}',
+                      'Nom: ${userInfo['nom']}',
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 14,
@@ -82,7 +97,7 @@ class ProfilScreenState extends State<ProfilScreen> {
                     alignment: Alignment.topLeft,
                     // Affichage du prénom de l'utilisateur
                     child: Text(
-                      'Prénom: ${user['prenom']}',
+                      'Prénom: ${userInfo['prenom']}',
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 14,
@@ -95,12 +110,14 @@ class ProfilScreenState extends State<ProfilScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     margin: const EdgeInsets.symmetric(vertical: 60.0),
                     child: ElevatedButton(
-                      onPressed: () {
-                        // Disconnect the user
+                      onPressed: () async {
+                        // Delete token
+                        await prefs.remove('token');
+                        // Redirect to login page
                         Navigator.pushNamed(context, '/');
                       },
                       style: ElevatedButton.styleFrom(
-                        // couleur du bouton
+                        // btn color
                         primary: Colors.black,
                         fixedSize: const Size(200, 50),
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -147,9 +164,7 @@ class ProfilScreenState extends State<ProfilScreen> {
                 children: [
                   ElevatedButton(
                       onPressed: () {
-                        // redirect to the school screen
-                        Navigator.pushNamed(context, '/ecole',
-                            arguments: {'user': user});
+                        Navigator.pushNamed(context, '/ecole');
                       },
                       child: Icon(Icons.check_box, color: Colors.black),
                       style: ElevatedButton.styleFrom(

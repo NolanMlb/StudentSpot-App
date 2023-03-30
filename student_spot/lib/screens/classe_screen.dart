@@ -14,24 +14,24 @@ class ClasseScreen extends StatefulWidget {
 
 class ClasseScreenState extends State<ClasseScreen> {
   List<dynamic> _classes = [];
-  int _idEcole = 0;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Récupération des arguments passés depuis EcoleScreen
+    // Get the arguments passed from EcoleScreen
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final user = args['user'];
     final int idEcole = args['ecole'];
     _loadClasses(idEcole);
   }
 
   Future<void> _loadClasses(int idEcole) async {
     try {
-      // get "classe" by idEcole
+      // Call the flutter request to get the classes
       final response = await ClasseRequest.getClasseByIdEcole(idEcole);
+      // Decode the response
       final decodedResponse = json.decode(response.body) as List<dynamic>;
+      // Put the classes list in a variable
       final classes = decodedResponse;
       setState(() {
         _classes = classes;
@@ -46,16 +46,16 @@ class ClasseScreenState extends State<ClasseScreen> {
     // get data from previous screen
     final Map<Object, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<Object, dynamic>;
-    final user = args['user'];
-    // start of the screen
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
         children: [
           Column(
             children: <Widget>[
+              // Set the default top padding
               const SizedBox(height: 80.0),
               Center(
+                // Show the logo
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Image.asset('assets/img/logo.png', height: 48),
@@ -63,8 +63,10 @@ class ClasseScreenState extends State<ClasseScreen> {
               ),
               const SizedBox(height: 35.0),
               Container(
+                // Set the left margin for the title
                 margin: const EdgeInsets.only(left: 40.0),
                 alignment: Alignment.topLeft,
+                // Show the title of the page
                 child: const Text(
                   'Sélectionnez votre classe',
                   style: TextStyle(
@@ -77,19 +79,25 @@ class ClasseScreenState extends State<ClasseScreen> {
                 ),
               ),
               const SizedBox(height: 35.0),
+              // for each classes in the list, show a button
               ..._classes.map(
                 (classe) => Padding(
+                    // Set the padding between the buttons
                     padding: const EdgeInsets.only(bottom: 30.0),
                     child: SizedBox(
+                      // Full width button
                       width: double.infinity,
                       child: Container(
+                        // Set the left and right margin for the button
                         margin: const EdgeInsets.only(left: 40.0, right: 30.0),
+                        // Set the border decoration for the button
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(3.0),
                           border: Border.all(
                             color: const Color.fromARGB(255, 0, 0, 0),
                             width: 1,
                           ),
+                          // Set the shadow for the button
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(1),
@@ -101,16 +109,15 @@ class ClasseScreenState extends State<ClasseScreen> {
                         ),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            //
+                            // Set the background color for the button
                             backgroundColor: const Color(0xFFEDECF8),
+                            // Set the padding for the button
                             padding: const EdgeInsets.symmetric(vertical: 20.0),
                           ),
                           onPressed: () {
-                            // Redirect to "cours" screen
-                            Navigator.pushNamed(context, '/cours', arguments: {
-                              'user': user,
-                              'classe': classe['id']
-                            });
+                            // Navigate to the CoursScreen
+                            Navigator.pushNamed(context, '/cours',
+                                arguments: {'classe': classe['id']});
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -118,7 +125,7 @@ class ClasseScreenState extends State<ClasseScreen> {
                             children: [
                               const SizedBox(width: 30.0),
                               Text(
-                                // Decoding of special characters in the class_name field
+                                // Decode the class name from utf8 and show it
                                 utf8.decode(classe['nom_classe'].codeUnits),
                                 style: const TextStyle(
                                   color: Colors.black,
@@ -136,6 +143,7 @@ class ClasseScreenState extends State<ClasseScreen> {
               ),
             ],
           ),
+          // Set the position and style of the bottom buttons
           Positioned(
             left: 110,
             right: 110,
@@ -169,10 +177,9 @@ class ClasseScreenState extends State<ClasseScreen> {
                           ))),
                   ElevatedButton(
                       onPressed: () {
+                        // Redirect to the profil screen
                         Navigator.maybePop(context);
-                        // Redirect to "profil" screen
-                        Navigator.pushNamed(context, '/profil',
-                            arguments: {'user': user});
+                        Navigator.pushNamed(context, '/profil');
                       },
                       child: Icon(Icons.person, color: Colors.black),
                       style: ElevatedButton.styleFrom(
