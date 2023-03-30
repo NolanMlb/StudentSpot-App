@@ -164,7 +164,7 @@ class ProfilScreenState extends State<ProfilScreen> {
                 children: [
                   ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/ecole');
+                        Navigator.pop(context);
                       },
                       child: Icon(Icons.check_box, color: Colors.black),
                       style: ElevatedButton.styleFrom(

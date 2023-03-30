@@ -48,19 +48,26 @@ class ClasseScreenState extends State<ClasseScreen> {
         ModalRoute.of(context)!.settings.arguments as Map<Object, dynamic>;
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Image.asset(
+          'assets/img/logo.png', // Chemin d'accès au fichier du logo
+          fit: BoxFit.contain, // Ajuster la taille du logo
+          height: 48.0, // Hauteur maximale du logo
+        ),
+        centerTitle: true,
+      ),
       body: Stack(
         children: [
           Column(
             children: <Widget>[
-              // Set the default top padding
-              const SizedBox(height: 80.0),
-              Center(
-                // Show the logo
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Image.asset('assets/img/logo.png', height: 48),
-                ),
-              ),
               const SizedBox(height: 35.0),
               Container(
                 // Set the left margin for the title
@@ -78,7 +85,21 @@ class ClasseScreenState extends State<ClasseScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 35.0),
+              _classes.isEmpty
+                  ? Container(
+                      margin: const EdgeInsets.only(top: 30.0),
+                      alignment: Alignment.center,
+                      child: const Text(
+                        'Vous n\'avez pas encore de classe',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                          fontFamily: 'Unbounded',
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                    )
+                  : const SizedBox(height: 35.0),
               // for each classes in the list, show a button
               ..._classes.map(
                 (classe) => Padding(

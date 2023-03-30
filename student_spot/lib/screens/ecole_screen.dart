@@ -71,19 +71,20 @@ class EcoleScreenState extends State<EcoleScreen> {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Image.asset(
+          'assets/img/logo.png', // Chemin d'accès au fichier du logo
+          fit: BoxFit.contain, // Ajuster la taille du logo
+          height: 48.0, // Hauteur maximale du logo
+        ),
+        centerTitle: true,
+      ),
       body: Stack(
         children: [
           Column(
             children: <Widget>[
-              // Set the start margin height
-              const SizedBox(height: 80.0),
-              Center(
-                // Show the logo
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Image.asset('assets/img/logo.png', height: 48),
-                ),
-              ),
               const SizedBox(height: 35.0),
               // Show the title of the page
               Container(
@@ -102,7 +103,21 @@ class EcoleScreenState extends State<EcoleScreen> {
                 ),
               ),
               // Set the margin between the title and the list of schools
-              const SizedBox(height: 35.0),
+              _schools.isEmpty
+                  ? Container(
+                      margin: const EdgeInsets.only(top: 30.0),
+                      alignment: Alignment.center,
+                      child: const Text(
+                        'Vous n\'avez pas encore d\'école',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                          fontFamily: 'Unbounded',
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                    )
+                  : const SizedBox(height: 35.0),
               // For each school, show a button
               ..._schools.map(
                 (ecole) => Padding(
