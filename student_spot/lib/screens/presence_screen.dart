@@ -199,15 +199,29 @@ class PresenceScreenState extends State<PresenceScreen> {
                                       margin: const EdgeInsets.only(top: 7.0),
                                       child: Column(children: [
                                         ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            // display student's image
-                                            child: Image.asset(
-                                                "assets/img/eleves_img/${_eleves[index]['eleve_photo']}",
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.17)),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          child: _eleves[index]
+                                                      ['eleve_photo'] !=
+                                                  null
+                                              ? Image.asset(
+                                                  // display student's photo
+                                                  'assets/img/eleves_img/${_eleves[index]['eleve_photo']}',
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.17)
+                                              : ClipRRect(
+                                                  child: Image.asset(
+                                                      // display default photo if student's photo is null
+                                                      'assets/img/eleve_test.jpeg',
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.17),
+                                                ),
+                                        ),
                                         SizedBox(
                                           height: MediaQuery.of(context)
                                                   .size

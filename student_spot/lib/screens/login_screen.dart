@@ -145,7 +145,6 @@ class LoginScreen extends StatelessWidget {
                             await prefs.setString('token', token);
                             var decodedToken = JwtDecoder.decode(token);
                             // If the user is not an admin or a teacher
-                            print(decodedToken['role']);
                             if (decodedToken['role'] != 1 &&
                                 decodedToken['role'] != 3) {
                               // ignore: use_build_context_synchronously
